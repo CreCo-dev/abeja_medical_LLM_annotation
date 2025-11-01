@@ -1,33 +1,25 @@
 # abeja_medical_LLM_annotation
 
 # バックエンド
-## Dockerの場合
-### 環境構築
+## 環境構築
 - (Dockerのインストール)
 - cd abeja_medical_LLM_annotation
 - docker compose up --build
-### doc
+## doc
 - http://localhost:80/docs
 - http://localhost:80/redoc
-### テスト
+## テスト
 - curl http://localhost:80/
 - curl -X GET http://localhost:80/sample_get
 - curl -X POST http://localhost:80/sample_post
-
-## ローカルの場合
-### 環境構築
-- (Python3のインストール)
-- (pip3のインストール)
-- pip3 install fastapi uvicorn
-- cd ./fastapi_sample/app
-- uvicorn main:app --reload
-### doc
-- http://localhost:8000/docs
-- http://localhost:8000/redoc
-### テスト
-- curl http://localhost:8000/
-- curl -X GET http://localhost:8000/sample_get
-- curl -X POST http://localhost:8000/sample_post
+## データベース
+- user_accounts
+    | カラム名 | 型 | 制約 |
+    | -------------- | ---------------- | ------------------------------------------ |
+    | `id`           | `INTEGER`        | `PRIMARY KEY`, `AUTO INCREMENT`, `INDEX`   |
+    | `login_id`     | `VARCHAR(50)`    | `UNIQUE`, `NOT NULL`                       |
+    | `password`     | `VARCHAR(255)`   | `NOT NULL`                                 |
+    | `name`         | `VARCHAR(50)`    | `NOT NULL`                                 |
 
 
 # フロントエンド

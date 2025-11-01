@@ -6,17 +6,10 @@ TODO
 
 """
 
-# ---------------------------------------------------------------------
 # Standard Library
-# ---------------------------------------------------------------------
 import os
 
-# ---------------------------------------------------------------------
 # Third Party
-# ---------------------------------------------------------------------
-
-
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -30,10 +23,10 @@ app.add_middleware(
     allow_headers=['*']
 )
 
-
 # ルーターのインポート--------------------------------
 from routers import (
-    sample_router
+    sample_router,
+    user_accounts_router
 )
 
 @app.get("/")
@@ -42,5 +35,4 @@ async def root():
 
 # サンプルルーター
 app.include_router(sample_router.router)
-
-
+app.include_router(user_accounts_router.router)
