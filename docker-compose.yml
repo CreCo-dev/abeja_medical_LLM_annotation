@@ -1,0 +1,11 @@
+#version: '3.8'
+services:
+  backend:
+    container_name: backend_fastapi_sample
+    build: ./backend/fastapi_sample
+    command: uvicorn main:app --host 0.0.0.0 --reload
+    ports: 
+      - "80:8000"
+    working_dir: /app
+    volumes:
+      - ./backend/fastapi_sample/app:/app
