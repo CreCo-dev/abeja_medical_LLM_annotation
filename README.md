@@ -21,7 +21,23 @@
 - curl http://localhost:70/
 - curl -X GET http://localhost:780/user_accounts
 
-### テストデータベース
+### 認証方法
+### JWTトークンを利用したログイン認証
+Request
+```
+curl -X POST http://localhost:70/login \
+     -H "Content-Type: application/x-www-form-urlencoded" \
+     -d "username=taro123&password=abc123"
+```
+Response
+```
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9....",
+  "token_type": "bearer"
+}
+```
+
+## テストデータベース
 - user_accounts
     | カラム名 | 型 | 制約 |
     | -------------- | ---------------- | ------------------------------------------ |
