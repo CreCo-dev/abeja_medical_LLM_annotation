@@ -14,6 +14,21 @@ services:
       db:
         condition: service_healthy
 
+  backend_with_auth:
+    container_name: backend_fastapi_sample_with_auth
+    build: ./backend/fastapi_sample_with_auth
+    command: uvicorn main:app --host 0.0.0.0 --reload
+    ports:
+      - "70:8000"
+    working_dir: /app
+    volumes:
+      - ./backend/fastapi_sample_with_auth/app:/app
+    environment:
+      - DATABASE_URL=mysql+pymysql://root:password@db:3306/sampledb
+    depends_on:
+      db:
+        condition: service_healthy
+
   db:
     image: mysql:8.0
     container_name: mysql_db
