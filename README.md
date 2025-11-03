@@ -32,7 +32,8 @@ curl -X GET http://localhost:80/user_accounts
 ## サンプルアプリ(※ログイン認証必要)
 ### doc
 - http://localhost:70/docs
-### 動作確認
+### 動作確認(認証方法)
+### JWTトークンを利用したログイン認証
 ```bash
 curl http://localhost:70/
 ```
@@ -45,34 +46,18 @@ curl -X GET http://localhost:70/user_accounts_with_auth/me
 →{"detail":"Not authenticated"}
 ```
 ```bash
-
 curl -X POST http://localhost:70/login \
      -H 'Content-Type: application/x-www-form-urlencoded' \
      -d 'username=test_id_3&password=test_password_3'
 
-→{"access_token":"ey･･････.･･････,"token_type":"bearer"}%        
+Response
+→{"access_token":"ey･･････.･･････,"token_type":"bearer"}
 ```
 ```bash
 curl -X GET http://localhost:70/user_accounts_with_auth/me -H 'Authorization: Bearer ey･･････.･･････'
 
-→{"id":ey･･････}
-```
-
-
-### 認証方法
-### JWTトークンを利用したログイン認証
-Request
-```bash
-curl -X POST http://localhost:70/login \
-     -H "Content-Type: application/x-www-form-urlencoded" \
-     -d "username=taro123&password=abc123"
-```
 Response
-```bash
-{
-  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9....",
-  "token_type": "bearer"
-}
+→{"id":ey･･････}
 ```
 
 ## テストデータベース
