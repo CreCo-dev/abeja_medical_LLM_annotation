@@ -6,14 +6,22 @@
 - docker compose up --build
 
 # バックエンド
-## doc
+
+## サンプルアプリ(認証不要)
+### doc
 - http://localhost:80/docs
-- http://localhost:80/redoc
-## テスト
+### テスト
 - curl http://localhost:80/
-- curl -X GET http://localhost:80/sample_get
-- curl -X POST http://localhost:80/sample_post
-## テストデータベース
+- curl -X GET http://localhost:80/user_accounts
+
+## サンプルアプリ(※ログイン認証必要)
+### doc
+- http://localhost:70/docs
+### テスト
+- curl http://localhost:70/
+- curl -X GET http://localhost:780/user_accounts
+
+### テストデータベース
 - user_accounts
     | カラム名 | 型 | 制約 |
     | -------------- | ---------------- | ------------------------------------------ |
