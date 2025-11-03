@@ -7,6 +7,14 @@
 
 # バックエンド
 
+##TODO:
+- 設定関係は環境編集に持つ    from dotenv import load_dotenv
+- ユーザーアカウント作成時 
+    - login_id の重複チェック DBはユニーク制約が システム的にチェックしていない →する。
+    - パスワード 72 文字を超えると 暗号化できない 入力時のチェック処理入れる。
+- ユーザー認証のキー 環境変数化 SECRET_KEY = "your-secret-key"  # ← TODO: 環境変数管理に切り替え推奨
+- ログイン認証 パッケージ構成リファクタリング
+
 ## サンプルアプリ(認証不要)
 ### doc
 - http://localhost:80/docs
@@ -29,10 +37,25 @@ curl -X GET http://localhost:80/user_accounts
 curl http://localhost:70/
 ```
 ```bash
-curl -X POST http://localhost:70/user_accounts -H  'Content-Type: application/json' -d '{"login_id": "test_id_1","password": "test_password_1","name": "test_name_1"}'
+curl -X POST http://localhost:70/user_accounts -H  'Content-Type: application/json' -d '{"login_id": "test_id_3","password": "test_password_3","name": "test_name_3"}'
 ```
 ```bash
-curl -X GET http://localhost:70/user_accounts
+curl -X GET http://localhost:70/user_accounts_with_auth/me
+
+→{"detail":"Not authenticated"}
+```
+```bash
+
+curl -X POST http://localhost:70/login \
+     -H 'Content-Type: application/x-www-form-urlencoded' \
+     -d 'username=test_id_3&password=test_password_3'
+
+→{"access_token":"ey･･････.･･････,"token_type":"bearer"}%        
+```
+```bash
+curl -X GET http://localhost:70/user_accounts_with_auth/me -H 'Authorization: Bearer ey･･････.･･････'
+
+→{"id":ey･･････}
 ```
 
 

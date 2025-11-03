@@ -1,11 +1,3 @@
-
-"""
-TODO
-設定関係は環境編集に持つ
-    from dotenv import load_dotenv
-
-"""
-
 # Standard Library
 import os
 
@@ -26,13 +18,15 @@ app.add_middleware(
 # ルーターのインポート--------------------------------
 from routers import (
     sample_router,
-    user_accounts_router
+    user_accounts_router,
+    auth_router
 )
 
 @app.get("/")
 async def root():
     return "ok"
 
-# サンプルルーター
+# ルーター
 app.include_router(sample_router.router)
 app.include_router(user_accounts_router.router)
+app.include_router(auth_router.router)

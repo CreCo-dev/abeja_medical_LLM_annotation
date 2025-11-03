@@ -1,6 +1,12 @@
 from sqlalchemy.orm import Session
 from db import models
 from schemas import user_account_schema
+from passlib.context import CryptContext
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+def get_password_hash(password):
+    return pwd_context.hash(password)
 
 def get_all_accounts(db: Session):
     return db.query(models.UserAccount).all()
@@ -9,9 +15,12 @@ def get_account_by_id(db: Session, account_id: int):
     return db.query(models.UserAccount).filter(models.UserAccount.id == account_id).first()
 
 def create_account(db: Session, account: user_account_schema.UserAccountCreate):
+    #print(account.password)
+    hashed_password = get_password_hash(account.password)
+    #print(hashed_password)
     new_account = models.UserAccount(
         login_id=account.login_id,
-        password=account.password,  # ← 本来はハッシュ化推奨
+        password=hashed_password,
         name=account.name
     )
     db.add(new_account)
@@ -23,7 +32,7 @@ def update_account(db: Session, account_id: int, account: user_account_schema.Us
     db_account = db.query(models.UserAccount).filter(models.UserAccount.id == account_id).first()
     if db_account:
         db_account.login_id = account.login_id
-        db_account.password = account.password
+        db_account.password = get_password_hash(account.password)
         db_account.name = account.name
         db.commit()
         db.refresh(db_account)
