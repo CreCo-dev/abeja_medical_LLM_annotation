@@ -1,10 +1,11 @@
 # abeja_medical_LLM_annotation
 
-# バックエンド
-## 環境構築
+# 環境構築
 - (Dockerのインストール)
 - cd abeja_medical_LLM_annotation
 - docker compose up --build
+
+# バックエンド
 ## doc
 - http://localhost:80/docs
 - http://localhost:80/redoc
@@ -12,7 +13,7 @@
 - curl http://localhost:80/
 - curl -X GET http://localhost:80/sample_get
 - curl -X POST http://localhost:80/sample_post
-## データベース
+## テストデータベース
 - user_accounts
     | カラム名 | 型 | 制約 |
     | -------------- | ---------------- | ------------------------------------------ |
