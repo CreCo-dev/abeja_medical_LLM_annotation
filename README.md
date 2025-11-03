@@ -10,27 +10,42 @@
 ## サンプルアプリ(認証不要)
 ### doc
 - http://localhost:80/docs
-### テスト
-- curl http://localhost:80/
-- curl -X GET http://localhost:80/user_accounts
+### 動作確認
+```bash
+curl http://localhost:80/
+```
+```bash
+curl -X POST http://localhost:80/user_accounts -H  'Content-Type: application/json' -d '{"login_id": "test_id_1","password": "test_password_1","name": "test_name_1"}'
+```
+```bash
+curl -X GET http://localhost:80/user_accounts
+```
 
 ## サンプルアプリ(※ログイン認証必要)
 ### doc
 - http://localhost:70/docs
-### テスト
-- curl http://localhost:70/
-- curl -X GET http://localhost:780/user_accounts
+### 動作確認
+```bash
+curl http://localhost:70/
+```
+```bash
+curl -X POST http://localhost:70/user_accounts -H  'Content-Type: application/json' -d '{"login_id": "test_id_1","password": "test_password_1","name": "test_name_1"}'
+```
+```bash
+curl -X GET http://localhost:70/user_accounts
+```
+
 
 ### 認証方法
 ### JWTトークンを利用したログイン認証
 Request
-```
+```bash
 curl -X POST http://localhost:70/login \
      -H "Content-Type: application/x-www-form-urlencoded" \
      -d "username=taro123&password=abc123"
 ```
 Response
-```
+```bash
 {
   "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9....",
   "token_type": "bearer"
