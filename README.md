@@ -43,6 +43,7 @@ curl -X POST http://localhost:70/user_accounts -H  'Content-Type: application/js
 ```bash
 curl -X GET http://localhost:70/user_accounts_with_auth/me
 
+Response(認証失敗)
 →{"detail":"Not authenticated"}
 ```
 ```bash
@@ -50,13 +51,13 @@ curl -X POST http://localhost:70/login \
      -H 'Content-Type: application/x-www-form-urlencoded' \
      -d 'username=test_id_3&password=test_password_3'
 
-Response
+Response((トークン取得))
 →{"access_token":"ey･･････.･･････,"token_type":"bearer"}
 ```
 ```bash
 curl -X GET http://localhost:70/user_accounts_with_auth/me -H 'Authorization: Bearer ey･･････.･･････'
 
-Response
+Response(認証成功)
 →{"id":ey･･････}
 ```
 
