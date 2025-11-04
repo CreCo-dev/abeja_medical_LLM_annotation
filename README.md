@@ -84,20 +84,8 @@ Backend（FastAPI + MySQL）
 # リポジトリ直下
 docker compose up -d
 
-
-# docker compose up -d で起動しない場合
-まず DBだけ先に起動→安定するのを待つ
-
-cd C:\Users\youyouryou\Desktop\abeja_medical_LLM_annotation
-docker compose up -d db
-docker compose logs -f db   # 「ready for connections」が出るまで眺める（Ctrl+Cで抜ける）
-
-その後 バックエンドを再起動
- docker compose up -d backend
-または
- docker compose restart backend_fastapi_sample
-
-
+**Note:** MySQLのヘルスチェックが設定されているため、バックエンドはMySQLの準備が完了してから自動的に起動します。
+手動でDBを先に起動する必要はありません。
 
 # 状態確認
 docker compose ps
