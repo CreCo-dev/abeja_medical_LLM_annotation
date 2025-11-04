@@ -6,7 +6,7 @@
 - docker compose up --build
 
 # バックエンド
-## サンプルアプリ(認証不要)
+## サンプルアプリ(認証なし)
 ### doc
 - http://localhost:80/docs
 ### 動作確認
@@ -20,7 +20,7 @@ curl -X POST http://localhost:80/user_accounts -H  'Content-Type: application/js
 curl -X GET http://localhost:80/user_accounts
 ```
 
-## サンプルアプリ(※ログイン認証必要)
+## サンプルアプリ(※ログイン認証あり)
 ### doc
 - http://localhost:70/docs
 ### 動作確認(認証方法)
