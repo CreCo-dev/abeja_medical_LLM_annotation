@@ -1,7 +1,7 @@
 
 ## TODO
 # 全般
-- 設定関係は環境編集に持つ    from dotenv import load_dotenv
+- 設定関係は環境変数に持つ    from dotenv import load_dotenv
     - ユーザー認証のキー 環境変数化 SECRET_KEY = "your-secret-key"  
     - database.py DATABASE_URL
     - utils/logger 使いやすいように変更する
