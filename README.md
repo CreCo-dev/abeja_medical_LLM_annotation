@@ -40,7 +40,7 @@ curl -X POST http://localhost:70/user_accounts -H  'Content-Type: application/js
 curl -X GET http://localhost:70/user_accounts_with_auth/me
 
 (認証失敗)
-→{"detail":"Not authenticated"}
+→{"detail":"Not authenticated"}%
 ```
 ```bash
 (ログイン)
@@ -49,14 +49,14 @@ curl -X POST http://localhost:70/login \
      -d 'username=test_id_3&password=test_password_3'
 
 (ログイン成功トークン取得)
-→{"access_token":"ey･･････.･･････,"token_type":"bearer"}
+→{"access_token":"ey･･････.･･････,"token_type":"bearer"}%
 ```
 ```bash
 (上記で取得したaccess_tokenを利用する)
 curl -X GET http://localhost:70/user_accounts_with_auth/me -H 'Authorization: Bearer ey･･････.･･････'
 
 (認証成功)
-→{"id":XX,"login_id":"XXXXXX","name":"XXXXXX"}% 
+→{"id":XX,"login_id":"XXXXXX","name":"XXXXXX"}%
 ```
 
 ## テストデータベース
