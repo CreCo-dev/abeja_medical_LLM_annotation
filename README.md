@@ -6,15 +6,6 @@
 - docker compose up --build
 
 # バックエンド
-
-##TODO:
-- 設定関係は環境編集に持つ    from dotenv import load_dotenv
-- ユーザーアカウント作成時 
-    - login_id の重複チェック DBはユニーク制約が システム的にチェックしていない →する。
-    - パスワード 72 文字を超えると 暗号化できない 入力時のチェック処理入れる。
-- ユーザー認証のキー 環境変数化 SECRET_KEY = "your-secret-key"  # ← TODO: 環境変数管理に切り替え推奨
-- ログイン認証 パッケージ構成リファクタリング
-
 ## サンプルアプリ(認証不要)
 ### doc
 - http://localhost:80/docs
@@ -36,29 +27,36 @@ curl -X GET http://localhost:80/user_accounts
 ### JWTトークンを利用したログイン認証
 ```bash
 curl http://localhost:70/
+
+→"ok"%
 ```
 ```bash
 curl -X POST http://localhost:70/user_accounts -H  'Content-Type: application/json' -d '{"login_id": "test_id_3","password": "test_password_3","name": "test_name_3"}'
+
+→{"id":XX,"login_id":"XXXXXX","name":"XXXXXX"}% 
+
 ```
 ```bash
 curl -X GET http://localhost:70/user_accounts_with_auth/me
 
-Response(認証失敗)
+(認証失敗)
 →{"detail":"Not authenticated"}
 ```
 ```bash
+(ログイン)
 curl -X POST http://localhost:70/login \
      -H 'Content-Type: application/x-www-form-urlencoded' \
      -d 'username=test_id_3&password=test_password_3'
 
-Response((トークン取得))
+(ログイン成功トークン取得)
 →{"access_token":"ey･･････.･･････,"token_type":"bearer"}
 ```
 ```bash
+(上記で取得したaccess_tokenを利用する)
 curl -X GET http://localhost:70/user_accounts_with_auth/me -H 'Authorization: Bearer ey･･････.･･････'
 
-Response(認証成功)
-→{"id":ey･･････}
+(認証成功)
+→{"id":XX,"login_id":"XXXXXX","name":"XXXXXX"}% 
 ```
 
 ## テストデータベース
