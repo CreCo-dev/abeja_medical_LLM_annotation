@@ -30,14 +30,17 @@ services:
         condition: service_healthy
 
   frontend:
-    container_name: frontend_nextjs
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     environment:
-      - NEXT_PUBLIC_API_BASE_URL=http://backend:8000
+      # ← 変数名を BASE_URL に揃える（next.config.ts が参照）
+      - NEXT_PUBLIC_API_BASE_URL=http://backend_with_auth:8000
+      - NODE_ENV=production
     depends_on:
-      - backend
+      - backend_with_auth
 
   db:
     image: mysql:8.0
