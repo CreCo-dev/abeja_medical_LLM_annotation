@@ -36,8 +36,8 @@ services:
     ports:
       - "3000:3000"
     environment:
-      # ← 変数名を BASE_URL に揃える（next.config.ts が参照）
-      - NEXT_PUBLIC_API_BASE_URL=http://backend_with_auth:8000
+      # ブラウザからアクセスするため、localhost:70を使用
+      - NEXT_PUBLIC_API_BASE_URL=http://localhost:70
       - NODE_ENV=production
     depends_on:
       - backend_with_auth

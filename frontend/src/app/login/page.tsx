@@ -18,7 +18,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       const data = await apiPost<{ access_token: string; token_type: string }>(
-        "/token",
+        "/login",
         { username, password },
         { form: true }
       );
