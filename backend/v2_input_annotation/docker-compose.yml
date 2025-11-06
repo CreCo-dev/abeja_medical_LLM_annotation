@@ -1,0 +1,38 @@
+services:
+  backend_v2_input_annotation:
+    container_name: backend_v2_input_annotation
+    build: ./       #./backend/fastapi_sample_with_auth
+    command: uvicorn main:app --host 0.0.0.0 --reload
+    ports:
+      - "82:8000"
+    working_dir: /app
+    volumes:
+      - ./app:/app        # ./backend/fastapi_sample_with_auth/app:/app
+    environment:
+      - DATABASE_URL=mysql+pymysql://root:password@db:3306/sampled
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql:8.0
+    container_name: mysql_db_v2_input_annotation
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: sampledb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      TZ: Asia/Tokyo
+    ports:
+      - "33062:3306"   #3306
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-ppassword"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  db_data:

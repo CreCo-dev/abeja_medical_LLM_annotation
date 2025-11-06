@@ -1,0 +1,16 @@
+
+fastapi
+uvicorn[standard]
+
+#python-dotenv
+pydantic-settings
+
+cryptography
+python-jose
+python-multipart
+passlib[bcrypt]
+bcrypt<4.0.0
+
+
+sqlalchemy
+pymysql
