@@ -89,6 +89,14 @@ erDiagram
 
 ```
 
+### DB構造変更時の初期化
+
+```SQL
+drop table discharge_summaries;
+drop table stroke_patients;
+drop table user_accounts;
+drop table kartes;
+```
 
 # フロントエンド
 
