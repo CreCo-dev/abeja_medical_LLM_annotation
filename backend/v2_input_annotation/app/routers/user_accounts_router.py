@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from db.database import get_db, engine
-from db import models
+from db.entities import user_account
 from cruds import user_account_crud
 from schemas import user_account_schema
 
 router = APIRouter()
 
-models.Base.metadata.create_all(bind=engine)
+#user_account_entity.Base.metadata.create_all(bind=engine)
 
 @router.get("/user_accounts", response_model=list[user_account_schema.UserAccount])
 def read_accounts(db: Session = Depends(get_db)):

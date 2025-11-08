@@ -7,8 +7,9 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 from db.database import get_db
-from db.models import UserAccount
+from db.entities.user_account import UserAccount
 from config import get_settings
+from schemas.auth_schema import TokenResponse
 
 router = APIRouter()
 settings = get_settings()
@@ -43,7 +44,7 @@ def decode_access_token(token: str):
 # ==========================================================
 # 認証API
 # ==========================================================
-@router.post("/login")
+@router.post("/login", response_model=TokenResponse)
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     """
     ログインID(login_id)とパスワードを受け取り、JWTを返す
@@ -55,6 +56,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
     token_expires = timedelta(minutes=settings.access_token_expire_minutes)
     token = create_access_token({"sub": user.login_id}, token_expires)
     return {"access_token": token, "token_type": "bearer"}
+
 
 
 @router.get("/user_accounts_with_auth/me")
