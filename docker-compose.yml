@@ -1,13 +1,13 @@
 services:
   backend:
-    container_name: backend_fastapi_sample
-    build: ./backend/fastapi_sample
+    container_name: backend_v1_fastapi_sample
+    build: ./backend/v1_fastapi_sample
     command: uvicorn main:app --host 0.0.0.0 --reload
     ports:
       - "80:8000"
     working_dir: /app
     volumes:
-      - ./backend/fastapi_sample/app:/app
+      - ./backend/v1_fastapi_sample/app:/app
     environment:
       - DATABASE_URL=mysql+pymysql://root:password@db:3306/sampledb
     depends_on:
@@ -15,14 +15,14 @@ services:
         condition: service_healthy
 
   backend_with_auth:
-    container_name: backend_fastapi_sample_with_auth
-    build: ./backend/fastapi_sample_with_auth
+    container_name: backend_v1.1_fastapi_sample_with_auth
+    build: ./backend/v1.1_fastapi_sample_with_auth
     command: uvicorn main:app --host 0.0.0.0 --reload
     ports:
       - "70:8000"
     working_dir: /app
     volumes:
-      - ./backend/fastapi_sample_with_auth/app:/app
+      - ./backend/v1.1_fastapi_sample_with_auth/app:/app
     environment:
       - DATABASE_URL=mysql+pymysql://root:password@db:3306/sampledb
     depends_on:
