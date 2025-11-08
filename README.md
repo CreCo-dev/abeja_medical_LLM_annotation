@@ -67,7 +67,7 @@ erDiagram
 
     Karte（カルテ） {
         int id PK "ID"
-        string karte_id "カルテID"
+        string karte_id UK "カルテID"
         string data_type "データタイプ (退院時サマリー / 脳卒中患者)"
         String status "ステータス"
     }
