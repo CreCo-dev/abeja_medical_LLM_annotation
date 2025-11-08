@@ -7,8 +7,6 @@ from schemas import user_account_schema
 
 router = APIRouter()
 
-#user_account_entity.Base.metadata.create_all(bind=engine)
-
 @router.get("/user_accounts", response_model=list[user_account_schema.UserAccount])
 def read_accounts(db: Session = Depends(get_db)):
     return user_account_crud.get_all_accounts(db)

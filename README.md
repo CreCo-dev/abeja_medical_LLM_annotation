@@ -60,13 +60,34 @@ curl -X GET http://localhost:70/user_accounts_with_auth/me -H 'Authorization: Be
 ```
 
 ## テストデータベース
-- user_accounts
-    | カラム名 | 型 | 制約 |
-    | -------------- | ---------------- | ------------------------------------------ |
-    | `id`           | `INTEGER`        | `PRIMARY KEY`, `AUTO INCREMENT`, `INDEX`   |
-    | `login_id`     | `VARCHAR(50)`    | `UNIQUE`, `NOT NULL`                       |
-    | `password`     | `VARCHAR(255)`   | `NOT NULL`                                 |
-    | `name`         | `VARCHAR(50)`    | `NOT NULL`                                 |
+```mermaid
+erDiagram
+    Karte ||--o{ DischargeSummary : "カルテID"
+    Karte ||--o{ StrokePatient : "カルテID"
+
+    Karte {
+        int id PK "ID"
+        string karte_id "カルテID"
+        string data_type "データタイプ (退院時サマリー / 脳卒中患者)"
+        String status "ステータス"
+    }
+    DischargeSummary {
+        int id PK "ID"
+        string karte_id FK,UK"カルテID"
+        string registered_type UK "登録タイプ(LLM,MAIN,SUB,CHK)"
+    }
+    StrokePatient {
+        int id PK "ID"
+        string karte_id FK,UK"カルテID"
+        string registered_type UK "登録タイプ(LLM,MAIN,SUB,CHK)"
+    }
+    USER_ACCOUNTS {
+        int id PK "ID"
+        string login_id UK "ログインID"
+        string name "氏名"
+    }
+
+```
 
 
 # フロントエンド

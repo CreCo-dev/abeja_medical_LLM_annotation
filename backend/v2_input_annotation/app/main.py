@@ -22,7 +22,10 @@ app.add_middleware(
 # ルーターのインポート--------------------------------
 from routers import (
     user_accounts_router,
-    auth_router
+    auth_router,
+    karte_router,
+    discharge_summary_router,
+    stroke_patient_router,
 )
 
 @app.get("/")
@@ -32,3 +35,6 @@ async def root():
 # ルーター
 app.include_router(user_accounts_router.router)
 app.include_router(auth_router.router)
+app.include_router(karte_router.router)
+app.include_router(discharge_summary_router.router)
+app.include_router(stroke_patient_router.router)

@@ -1,5 +1,5 @@
 services:
-  backend:
+  backend_v1:
     container_name: backend_v1_fastapi_sample
     build: ./backend/v1_fastapi_sample
     command: uvicorn main:app --host 0.0.0.0 --reload
@@ -14,7 +14,7 @@ services:
       db:
         condition: service_healthy
 
-  backend_with_auth:
+  backend_v1.1_with_auth:
     container_name: backend_v1.1_fastapi_sample_with_auth
     build: ./backend/v1.1_fastapi_sample_with_auth
     command: uvicorn main:app --host 0.0.0.0 --reload
@@ -25,6 +25,21 @@ services:
       - ./backend/v1.1_fastapi_sample_with_auth/app:/app
     environment:
       - DATABASE_URL=mysql+pymysql://root:password@db:3306/sampledb
+    depends_on:
+      db:
+        condition: service_healthy
+
+  backend_v2_input_annotation:
+    container_name: backend_v2_input_annotation
+    build: ./backend/v2_input_annotation
+    command: uvicorn main:app --host 0.0.0.0 --reload
+    ports:
+      - "82:8000"
+    working_dir: /app
+    volumes:
+      - ./backend/v2_input_annotation/app:/app
+    environment:
+      - DATABASE_URL=mysql+pymysql://root:password@db:3306/sampled
     depends_on:
       db:
         condition: service_healthy
@@ -40,7 +55,7 @@ services:
       - NEXT_PUBLIC_API_BASE_URL=http://localhost:70
       - NODE_ENV=production
     depends_on:
-      - backend_with_auth
+      - backend_v1.1_with_auth
 
   db:
     image: mysql:8.0

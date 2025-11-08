@@ -21,10 +21,16 @@
 - テスト テストコード実装(間に合わない場合は手動テストのみとする)
 
 ## TEST
+select * FROM user_accounts
+delete from user_accounts
 
 curl http://localhost:82/
 
 →"ok"%
+
+curl -X GET http://localhost:82/user_accounts
+
+
 curl -X POST http://localhost:82/user_accounts -H  'Content-Type: application/json' -d '{"login_id": "test_id_3","password": "test_password_3","name": "test_name_3"}'
 
 →{"id":XX,"login_id":"XXXXXX","name":"XXXXXX"}% 
@@ -33,6 +39,7 @@ curl -X GET http://localhost:82/user_accounts_with_auth/me
 
 (認証失敗)
 →{"detail":"Not authenticated"}%
+
 (ログイン)
 curl -X POST http://localhost:82/login \
      -H 'Content-Type: application/x-www-form-urlencoded' \
@@ -47,4 +54,37 @@ curl -X GET http://localhost:82/user_accounts_with_auth/me -H 'Authorization: Be
 →{"id":XX,"login_id":"XXXXXX","name":"XXXXXX"}%
 
 
-curl -X GET http://localhost:82/user_accounts_with_auth/me -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0X2lkXzMiLCJleHAiOjE3NjI0MzUzNDZ9.hdWxhom_Ckcvx28fWB185M3m-860h3APgcXlBsRL7Bc'
+curl -X GET http://localhost:82/user_accounts_with_auth/me -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0X2lkXzMiLCJleHAiOjE3NjI1OTE3NTV9.40d0kxqFUZBu4vI4vKTMRLkPpidmGDYWk6l-0TSEZ6c'
+
+
+## メモ
+
+
+```mermaid
+erDiagram
+    Karte ||--o{ DischargeSummary : "カルテID"
+    Karte ||--o{ StrokePatient : "カルテID"
+
+    Karte {
+        int id PK "ID"
+        string karte_id "カルテID"
+        string data_type "データタイプ (退院時サマリー / 脳卒中患者)"
+        String status "ステータス"
+    }
+    DischargeSummary {
+        int id PK "ID"
+        string karte_id FK,UK"カルテID"
+        string registered_type UK "登録タイプ(LLM,MAIN,SUB,CHK)"
+    }
+    StrokePatient {
+        int id PK "ID"
+        string karte_id FK,UK"カルテID"
+        string registered_type UK "登録タイプ(LLM,MAIN,SUB,CHK)"
+    }
+    USER_ACCOUNTS {
+        int id PK "ID"
+        string login_id UK "ログインID"
+        string name "氏名"
+    }
+
+```
