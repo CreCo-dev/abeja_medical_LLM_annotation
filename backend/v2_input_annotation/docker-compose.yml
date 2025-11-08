@@ -1,13 +1,13 @@
 services:
   backend_v2_input_annotation:
     container_name: backend_v2_input_annotation
-    build: ./       #./backend/fastapi_sample_with_auth
+    build: ./       #./backend/application_name
     command: uvicorn main:app --host 0.0.0.0 --reload
     ports:
       - "82:8000"
     working_dir: /app
     volumes:
-      - ./app:/app        # ./backend/fastapi_sample_with_auth/app:/app
+      - ./app:/app        # ./backend/application_name/app:/app
     environment:
       - DATABASE_URL=mysql+pymysql://root:password@db:3306/sampled
     depends_on:
