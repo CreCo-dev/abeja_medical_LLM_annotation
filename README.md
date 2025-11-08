@@ -62,8 +62,8 @@ curl -X GET http://localhost:70/user_accounts_with_auth/me -H 'Authorization: Be
 ## テストデータベース
 ```mermaid
 erDiagram
-    Karte（カルテ） ||--o{ DischargeSummary（退院時サマリ） : "カルテID"
-    Karte（カルテ） ||--o{ StrokePatient（脳卒中患者） : "カルテID"
+    Karte（カルテ） ||--o{ DischargeSummary（退院時サマリ） : "karte_id"
+    Karte（カルテ） ||--o{ StrokePatient（脳卒中患者） : "karte_id"
 
     Karte（カルテ） {
         int id PK "ID"
@@ -73,12 +73,12 @@ erDiagram
     }
     DischargeSummary（退院時サマリ） {
         int id PK "ID"
-        string karte_id FK,UK"カルテID"
+        string karte_id FK,UK "カルテID"
         string registered_type UK "登録タイプ(LLM,MAIN,SUB,CHK)"
     }
     StrokePatient（脳卒中患者） {
         int id PK "ID"
-        string karte_id FK,UK"カルテID"
+        string karte_id FK,UK "カルテID"
         string registered_type UK "登録タイプ(LLM,MAIN,SUB,CHK)"
     }
     USER_ACCOUNTS（ユーザーアカウント） {
