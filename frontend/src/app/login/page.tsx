@@ -1,82 +1,91 @@
+// frontend/src/app/login/page.tsx
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { apiPost } from "@/lib/api";
-import { saveToken, clearToken } from "@/lib/auth";
+import { loginAndGetToken, saveToken, clearToken } from "@/lib/api";
 
 export default function LoginPage() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [err, setErr] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [loginId, setLoginId] = useState("");
+  const [password, setPassword] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  async function onSubmit(e: FormEvent) {
+  async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setErr(null);
-    setLoading(true);
+    setError(null);
+    setBusy(true);
     try {
-      const data = await apiPost<{ access_token: string; token_type: string }>(
-        "/login",
-        { username, password },
-        { form: true }
-      );
-      saveToken(data.access_token);
-      router.push("/annotation");
-    } catch (e: any) {
+      const token = await loginAndGetToken({ username: loginId, password });
+      saveToken(token);
+      router.push("/annotation"); // ログイン後はアノテーションへ
+    } catch (err: any) {
+      setError(err?.message ?? "Login failed");
       clearToken();
-      setErr(e?.message ?? "ログインに失敗しました");
     } finally {
-      setLoading(false);
+      setBusy(false);
     }
   }
 
   return (
-    <div className="min-h-[100dvh] grid place-items-center bg-slate-50">
-      <form
-        onSubmit={onSubmit}
-        className="w-[min(420px,90vw)] rounded-2xl bg-white p-6 shadow-lg space-y-4 border"
-      >
-        <h1 className="text-2xl font-semibold">ログイン</h1>
+    <main className="min-h-dvh bg-white">
+      {/* 共通ヘッダー（他画面と統一） */}
+      <div className="bg-blue-700 text-white px-6 py-4 rounded-b-lg">
+        <h1 className="text-2xl font-bold">アノテーション ログイン</h1>
+      </div>
 
-        <label className="block space-y-1">
-          <span className="text-sm text-slate-600">ログインID</span>
-          <input
-            className="w-full rounded-xl border px-3 py-2 outline-none focus:ring-2"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            autoComplete="username"
-            required
-          />
-        </label>
+      <div className="mx-auto max-w-6xl p-4">
+        {/* セクション見出し（他画面と統一） */}
+        <div className="mb-3 rounded-md bg-blue-50 text-blue-900 font-semibold px-3 py-2">
+          ログイン
+        </div>
 
-        <label className="block space-y-1">
-          <span className="text-sm text-slate-600">パスワード</span>
-          <input
-            type="password"
-            className="w-full rounded-xl border px-3 py-2 outline-none focus:ring-2"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            autoComplete="current-password"
-            required
-          />
-        </label>
+        {/* 本体カード（他画面と統一） */}
+        <div className="rounded-xl border bg-gray-50 p-4">
+          <form onSubmit={onSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm text-gray-700 mb-1">ログインID</label>
+              <input
+                value={loginId}
+                onChange={(e) => setLoginId(e.target.value)}
+                className="w-full rounded-md border p-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                placeholder="test_login など"
+                required
+              />
+            </div>
 
-        {err && (
-          <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg p-2">
-            {err}
-          </p>
-        )}
+            <div>
+              <label className="block text-sm text-gray-700 mb-1">パスワード</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full rounded-md border p-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                placeholder="test_pass など"
+                required
+              />
+            </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full rounded-xl bg-sky-600 text-white py-2.5 font-medium hover:opacity-90 disabled:opacity-50"
-        >
-          {loading ? "サインイン中..." : "サインイン"}
-        </button>
-      </form>
-    </div>
+            {error && (
+              <p className="text-sm text-red-600 whitespace-pre-wrap">{error}</p>
+            )}
+
+            <button
+              type="submit"
+              disabled={busy}
+              className="w-full rounded-md border border-blue-700 bg-blue-700 px-4 py-2 text-white font-medium hover:bg-blue-800 disabled:opacity-50"
+            >
+              {busy ? "送信中..." : "ログイン"}
+            </button>
+          </form>
+
+          <div className="mt-6 text-xs text-gray-600 space-y-1">
+            <p>※ 事前に <code>POST /user_accounts</code> でユーザー作成が必要です。</p>
+            <p>　例: login_id=<code>test_login</code> / password=<code>test_pass</code></p>
+          </div>
+        </div>
+      </div>
+    </main>
   );
 }
