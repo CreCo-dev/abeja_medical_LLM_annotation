@@ -4,7 +4,7 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 # app
-from config import get_settings
+from app.config import get_settings
 
 settings = get_settings()
 print(f"[main] Loaded settings for environment: {settings.app_env}", flush=True)
@@ -20,7 +20,7 @@ app.add_middleware(
 )
 
 # ルーターのインポート--------------------------------
-from routers import (
+from app.routers import (
     user_accounts_router,
     auth_router,
     karte_router,

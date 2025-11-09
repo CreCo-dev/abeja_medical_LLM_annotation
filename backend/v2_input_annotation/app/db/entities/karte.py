@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Enum
 from sqlalchemy.orm import relationship
-from db.database import Base, engine
+from app.db.database import Base, engine
 
 class DataType:
     DC = "退院時サマリー"

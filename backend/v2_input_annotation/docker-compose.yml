@@ -1,15 +1,17 @@
 services:
   backend_v2_input_annotation:
     container_name: backend_v2_input_annotation
-    build: ./       #./backend/application_name
-    command: uvicorn main:app --host 0.0.0.0 --reload
+    build: .       #./backend/application_name
+    command: uvicorn app.main:app --host 0.0.0.0 --reload
     ports:
       - "82:8000"
     working_dir: /app
     volumes:
       - ./app:/app        # ./backend/application_name/app:/app
     environment:
-      - DATABASE_URL=mysql+pymysql://root:password@db:3306/sampled
+      - APP_ENV=local     #本番のインフラの場合 production とする (環境変数.envも必要)
+      - PYTHONPATH=/
+      - DATABASE_URL=mysql+pymysql://root:password@db:3306/sampledb
     depends_on:
       db:
         condition: service_healthy

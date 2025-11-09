@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship
-from db.database import Base, engine
+from app.db.database import Base, engine
 
 # 登録タイプ
 class RegisteredType:

@@ -25,6 +25,7 @@ MYSQL_PORT=3306
 MYSQL_USER=root
 MYSQL_PASSWORD=password
 MYSQL_DATABASE=sampledb
+DATABASE_URL=mysql+pymysql://root:password@db:3306/sampledb
 
 # =======================================
 # JWT / セキュリティ設定
@@ -35,73 +36,89 @@ ALGORITHM=HS256
 
 '''
 from pydantic_settings import BaseSettings
+from pydantic import ConfigDict
 from functools import lru_cache
 import os
 
-# env から読み取る設定クラス（本番用）
-class Settings(BaseSettings):
-    
-    app_env: str = "development"
 
-    # CORS設定
+# =====================================
+# Baseクラス（型定義のみ共通）
+# =====================================
+class CommonSettings(BaseSettings):
+    app_env: str
     allow_origins: list[str]
     allow_methods: list[str]
     allow_headers: list[str]
-    allow_credentials: bool = True
-
-    # Database
-    mysql_host: str
-    mysql_port: int
-    mysql_user: str
-    mysql_password: str
-    mysql_database: str
-
-    # JWT / Security
+    allow_credentials: bool
+    database_url: str
     secret_key: str
     algorithm: str
     access_token_expire_minutes: int
 
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
 
+# =====================================
+# 本番設定（.envから読み取る）
+# =====================================
+class ProdSettings(CommonSettings):
+    model_config = ConfigDict(env_file=".env", env_file_encoding="utf-8")
 
-# コード直書き設定クラス（ローカル or Fallback用）
-class Settings_on_code(BaseSettings):
+# =====================================
+# 開発環境（オンコード定義）
+# =====================================
+class LocalSettings(CommonSettings):
     app_env: str = "local"
 
-    # CORS設定
     allow_origins: list[str] = ["http://localhost:3000"]
     allow_methods: list[str] = ["*"]
     allow_headers: list[str] = ["*"]
     allow_credentials: bool = True
 
-    # Database
-    mysql_host: str = "db"
-    mysql_port: int = 3306
-    mysql_user: str = "root"
-    mysql_password: str = "password"
-    mysql_database: str = "sampledb"
+    database_url: str = "mysql+pymysql://root:password@db:3306/sampledb"
 
-    # JWT / Security
-    secret_key: str = "your-secret-key"
+    secret_key: str = "dev-secret-key"
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 30
 
 
-# 共通アクセサ（どちらを使うか自動判定）
+# =====================================
+# テスト環境（オンコード定義）
+# =====================================
+class TestSettings(CommonSettings):
+    app_env: str = "test"
+
+    allow_origins: list[str] = ["*"]
+    allow_methods: list[str] = ["*"]
+    allow_headers: list[str] = ["*"]
+    allow_credentials: bool = True
+
+    # SQLite（メモリ）を使用してテストDBを独立化
+    database_url: str = "sqlite:////tmp/test.db"
+
+    secret_key: str = "test-secret-key"
+    algorithm: str = "HS256"
+    access_token_expire_minutes: int = 30
+
+
+# =====================================
+# 環境切り替えロジック
+# =====================================
 @lru_cache()
-def get_settings():
+def get_settings() -> CommonSettings:
     """
     優先順位：
       1. APP_ENV が 'production' → .env設定（Settings）
-      2. それ以外（local, dev, test）→ コード直書き設定（Settings_on_code）
+      2. それ以外（local, dev, test）→ コード直書き設定（SettingsOnCode）
     """
     env = os.getenv("APP_ENV", "local").lower()
 
     if env in ("prod", "production"):
-        print("[config] Using environment: .env Settings", flush=True)
-        return Settings()  # .envから読み込む
+        print("[config] Using Production Settings (.env)", flush=True)
+        return ProdSettings()
+
+    elif env in ("test", "testing", "pytest"):
+        print("[config] Using Test Settings (on-code)", flush=True)
+        return TestSettings()
+
     else:
-        print("[config] Using environment: code Settings_on_code", flush=True)
-        return Settings_on_code()
+        print("[config] Using Local Settings (on-code)", flush=True)
+        return LocalSettings()

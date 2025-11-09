@@ -6,10 +6,10 @@ from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
-from db.database import get_db
-from db.entities.user_account import UserAccount
-from config import get_settings
-from schemas.auth_schema import TokenResponse
+from app.db.database import get_db
+from app.db.entities.user_account import UserAccount
+from app.config import get_settings
+from app.schemas.auth_schema import TokenResponse
 
 router = APIRouter()
 settings = get_settings()
