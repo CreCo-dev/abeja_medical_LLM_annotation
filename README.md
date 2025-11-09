@@ -6,7 +6,9 @@
 - docker compose up --build
 
 # バックエンド
-## サンプルアプリ(認証なし)
+## v1_fastapi_sample
+### 概要
+- サンプルアプリ(認証なし)
 ### doc
 - http://localhost:80/docs
 ### 動作確認
@@ -20,7 +22,9 @@ curl -X POST http://localhost:80/user_accounts -H  'Content-Type: application/js
 curl -X GET http://localhost:80/user_accounts
 ```
 
-## サンプルアプリ(※ログイン認証あり)
+## v1.1_fastapi_sample_with_auth
+### 概要
+- サンプルアプリ(※ログイン認証あり)
 ### doc
 - http://localhost:70/docs
 ### 動作確認(認証方法)
@@ -58,6 +62,11 @@ curl -X GET http://localhost:70/user_accounts_with_auth/me -H 'Authorization: Be
 (認証成功)
 →{"id":XX,"login_id":"XXXXXX","name":"XXXXXX"}%
 ```
+## v2_input_annotation
+### 概要
+- アノテーション入力用APIの追加
+### doc
+- http://localhost:82/docs
 
 ## テストデータベース
 ```mermaid
