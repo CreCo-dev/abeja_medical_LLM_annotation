@@ -1,9 +1,36 @@
 # abeja_medical_LLM_annotation
 
 # 環境構築
-- (Dockerのインストール)
-- cd abeja_medical_LLM_annotation
-- docker compose up --build
+
+## Docker環境（推奨）
+
+### 本番モード（最適化ビルド）
+```bash
+cd abeja_medical_LLM_annotation
+docker compose up -d --build
+```
+
+### 開発モード（ホットリロード対応）
+```bash
+cd abeja_medical_LLM_annotation
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+```
+
+**開発モードの特徴**:
+- ✅ コード変更が即座に反映（リビルド不要）
+- ✅ `frontend/src/`を編集すると自動リロード
+- ✅ Docker内で完結（ローカルPCを汚さない）
+
+### モード切り替え
+```bash
+# 開発モード → 本番モード
+docker compose down
+docker compose up -d --build
+
+# 本番モード → 開発モード
+docker compose down
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+```
 
 # バックエンド
 ## サンプルアプリ(認証なし)

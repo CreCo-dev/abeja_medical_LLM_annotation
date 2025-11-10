@@ -12,6 +12,16 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm ci
 
+# 開発モード（ホットリロード対応）
+FROM base AS dev
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+# ソースコードはボリュームマウントで提供される
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=development
+EXPOSE 3000
+CMD ["npm", "run", "dev"]
+
 # ビルド
 FROM base AS builder
 WORKDIR /app
@@ -20,6 +30,9 @@ COPY . .
 
 # 環境変数（ビルド時）
 ENV NEXT_TELEMETRY_DISABLED=1
+
+# node_modules/.binに実行権限を付与
+RUN chmod -R +x /app/node_modules/.bin
 
 RUN npm run build
 

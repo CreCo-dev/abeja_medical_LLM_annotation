@@ -1,0 +1,20 @@
+# 開発モード用のDocker Compose設定（ホットリロード対応）
+# 使い方: docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: dev
+    volumes:
+      # ソースコードをマウント（ホットリロード用）
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+      # node_modulesは除外（コンテナ内のものを使用）
+      - /app/node_modules
+      - /app/.next
+    environment:
+      - NEXT_PUBLIC_API_BASE_URL=http://localhost:70
+      - NODE_ENV=development
+    command: npm run dev
