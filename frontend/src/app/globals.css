@@ -24,3 +24,18 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* プレースホルダーとデフォルト値の色を濃く */
+input::placeholder,
+textarea::placeholder,
+select,
+input,
+textarea {
+  color: #111827 !important; /* text-gray-900 */
+  opacity: 1 !important;
+}
+
+/* selectのoptionも濃く */
+option {
+  color: #111827 !important;
+}

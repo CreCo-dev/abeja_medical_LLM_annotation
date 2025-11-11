@@ -18,15 +18,15 @@ function FieldBlock({ f }: { f: Field }) {
       <div className="flex gap-4">
         <div className="w-1/3 space-y-2">
           {f.inputType === "text" ? (
-            <input className="w-full rounded-md border p-2" defaultValue={f.value} />
+            <input className="w-full rounded-md border p-2 text-gray-900" defaultValue={f.value} />
           ) : (
-            <select className="w-full rounded-md border p-2" defaultValue={f.value}>
+            <select className="w-full rounded-md border p-2 text-gray-900" defaultValue={f.value}>
               {f.options?.map((o) => (
                 <option key={o} value={o}>{o}</option>
               ))}
             </select>
           )}
-          <select className="w-full rounded-md border p-2" defaultValue={String(f.confidence)}>
+          <select className="w-full rounded-md border p-2 text-gray-900" defaultValue={String(f.confidence)}>
             <option value="0">確信度: 0（情報なし）</option>
             <option value="1">確信度: 1（低い確信）</option>
             <option value="2">確信度: 2（やや確信）</option>
@@ -37,14 +37,14 @@ function FieldBlock({ f }: { f: Field }) {
 
         <div className="w-2/3 space-y-2">
           <div className="text-gray-600 font-medium">📋 判断理由に対するコメント</div>
-          <textarea className="h-20 w-full rounded-md border p-2" defaultValue={f.reason} />
+          <textarea className="h-20 w-full rounded-md border p-2 text-gray-900" defaultValue={f.reason} />
           <div className="rounded-md bg-gray-100 p-3">
             <div className="text-gray-600 font-medium mb-1">📄 参照データ(読み取り専用)</div>
-            <p className="text-sm text-gray-700">{f.refs.data}</p>
+            <p className="text-sm text-gray-900">{f.refs.data}</p>
           </div>
           <div className="rounded-md bg-gray-100 p-3">
             <div className="text-gray-600 font-medium mb-1">📖 レジストリルール</div>
-            <p className="text-sm text-gray-700">{f.refs.rule}</p>
+            <p className="text-sm text-gray-900">{f.refs.rule}</p>
           </div>
         </div>
       </div>
