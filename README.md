@@ -94,6 +94,41 @@ curl -X GET http://localhost:70/user_accounts_with_auth/me -H 'Authorization: Be
 - アノテーション入力用APIの追加
 ### doc
 - http://localhost:82/docs
+### 動作確認
+
+```bash
+# ユーザーアカウント 1件登録
+curl -X 'POST' 'http://localhost:70/user_accounts' -H 'accept: application/json' -H 'Content-Type: application/json' \
+   -d '{  "login_id": "test_id_1"
+         ,"password": "test_password_1"
+         ,"name": "test_name_1"}'
+# →レスポンスのIDを記録し、院時サマリ登録時の"registered_by"の値として設定する。
+
+# カルテ 1件登録
+curl -X 'POST' 'http://localhost:82/kartes/' -H 'accept: application/json' -H 'Content-Type: application/json' \
+  -d '{ "karte_data_id": "123",
+        "karte_name": "test_name",
+       "data_type": "DC"
+      }'
+# →レスポンスのIDを記録し、院時サマリ登録時の"karte_id"の値として設定する。
+
+# 退院時サマリ 1件
+curl -X 'POST' 'http://localhost:82/discharge_summaries/' -H 'accept: application/json' -H 'Content-Type: application/json' \
+  -d '{  "karte_id": 1,
+         "registered_type": "SUB",
+         "registered_at": "2025-11-11T14:07:34.252Z",
+         "registered_by": 1,
+         "patient_name": "string",
+         "patient_id": "string"
+      }'
+
+# カルテ 一覧
+curl -X 'GET' 'http://localhost:82/kartes/?skip=0&limit=100' \
+  -H 'accept: application/json'
+
+# 退院時サマリ 一覧
+curl -X 'GET' 'http://localhost:82/discharge_summaries/?skip=0&limit=100' -H 'accept: application/json'
+```
 
 ## テストデータベース
 ```mermaid
@@ -127,11 +162,30 @@ erDiagram
 
 ### DB構造変更時の初期化
 
-```SQL
+```sql
+-- DB構造変更した場合(以下実行後 再度 ビルド)
 drop table discharge_summaries;
 drop table stroke_patients;
-drop table user_accounts;
 drop table kartes;
+drop table user_accounts;
+
+-- データのみ削除する場合
+delete from discharge_summaries;
+delete from stroke_patients;
+delete from kartes;
+delete from user_accounts;
+ALTER TABLE discharge_summaries AUTO_INCREMENT = 1;
+ALTER TABLE stroke_patients AUTO_INCREMENT = 1;
+ALTER TABLE kartes AUTO_INCREMENT = 1;
+ALTER TABLE user_accounts AUTO_INCREMENT = 1;
+
+-- その他
+select * from kartes;
+select * from discharge_summaries;
+select * from stroke_patients;
+select * from user_accounts;
+
+
 ```
 
 # フロントエンド

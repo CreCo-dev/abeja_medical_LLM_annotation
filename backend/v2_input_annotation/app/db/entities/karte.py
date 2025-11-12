@@ -13,7 +13,7 @@ class Karte(Base):
     # ID
     id = Column(Integer, primary_key=True, index=True)
     # カルテID
-    karte_id = Column(String(50), unique=True, nullable=False)
+    karte_data_id = Column(String(50), unique=True, nullable=False)
     # カルテ名
     karte_name = Column(String(255), nullable=False)
     # データタイプ (退院時サマリー / 脳卒中患者)

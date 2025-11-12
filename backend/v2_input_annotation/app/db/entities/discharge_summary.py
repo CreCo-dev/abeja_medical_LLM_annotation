@@ -19,8 +19,8 @@ class DischargeSummary(Base):
 
     # ID
     id = Column(Integer, primary_key=True, index=True)
-    # カルテID
-    karte_id = Column(String(50), ForeignKey("kartes.karte_id"), nullable=False)
+    # カルテID (kartes.id)
+    karte_id = Column(Integer, ForeignKey("kartes.id"), nullable=False)
     # 登録タイプ
     registered_type = Column(String(10), nullable=False)
     # 登録日

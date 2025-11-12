@@ -86,18 +86,15 @@ class LocalSettings(CommonSettings):
 class TestSettings(CommonSettings):
     app_env: str = "test"
 
-    allow_origins: list[str] = ["*"]
+    allow_origins: list[str] = ["http://localhost:3000"]
     allow_methods: list[str] = ["*"]
     allow_headers: list[str] = ["*"]
     allow_credentials: bool = True
 
-    # SQLite（メモリ）を使用してテストDBを独立化
-    database_url: str = "sqlite:////tmp/test.db"
-
+    #database_url: str = "mysql+pymysql://root:test_root_password@test_db:33061/test_db"
     secret_key: str = "test-secret-key"
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 30
-
 
 # =====================================
 # 環境切り替えロジック
@@ -105,17 +102,17 @@ class TestSettings(CommonSettings):
 @lru_cache()
 def get_settings() -> CommonSettings:
     """
-    優先順位：
-      1. APP_ENV が 'production' → .env設定（Settings）
-      2. それ以外（local, dev, test）→ コード直書き設定（SettingsOnCode）
+    APP_ENV が 'production' → .env設定を利用
+    APP_ENV が 'test'       → コード直書き設定(pytest用)
+    それ以外（local）         → コード直書き設定(ローカルでの動作確認用)
     """
     env = os.getenv("APP_ENV", "local").lower()
 
-    if env in ("prod", "production"):
+    if env in ("production"):
         print("[config] Using Production Settings (.env)", flush=True)
         return ProdSettings()
 
-    elif env in ("test", "testing", "pytest"):
+    elif env in ("test"):
         print("[config] Using Test Settings (on-code)", flush=True)
         return TestSettings()
 

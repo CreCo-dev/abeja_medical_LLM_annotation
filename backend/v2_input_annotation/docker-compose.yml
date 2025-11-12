@@ -9,9 +9,9 @@ services:
     volumes:
       - ./app:/app        # ./backend/application_name/app:/app
     environment:
-      - APP_ENV=local     #本番のインフラの場合 production とする (環境変数.envも必要)
+      - APP_ENV=local     #本番環境の場合 production とする (環境変数.envも必要)
       - PYTHONPATH=/
-      - DATABASE_URL=mysql+pymysql://root:password@db:3306/sampledb
+      - DATABASE_URL=mysql+pymysql://root:password@db:3306/sampledb    # 3306
     depends_on:
       db:
         condition: service_healthy
@@ -27,7 +27,7 @@ services:
       MYSQL_PASSWORD: password
       TZ: Asia/Tokyo
     ports:
-      - "33062:3306"   #3306
+      - "3306:3306"    # 3306
     volumes:
       - db_data:/var/lib/mysql
     healthcheck:

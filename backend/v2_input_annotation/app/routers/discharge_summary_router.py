@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+
 from app.db.database import get_db
 from app.schemas import discharge_summary_schema
 from app.cruds import discharge_summary_crud
@@ -16,10 +17,10 @@ def create_discharge_summary(summary: discharge_summary_schema.DischargeSummaryC
 @router.get("/{id}", response_model=discharge_summary_schema.DischargeSummaryResponse)
 def read_discharge_summary(id: int, db: Session = Depends(get_db)):
     """IDで1件取得"""
-    db_summary = discharge_summary_crud.get_discharge_summary(db, id)
-    if db_summary is None:
+    db_data = discharge_summary_crud.get_discharge_summary(db, id)
+    if db_data is None:
         raise HTTPException(status_code=404, detail="Discharge summary not found")
-    return db_summary
+    return db_data
 
 
 @router.get("/", response_model=list[discharge_summary_schema.DischargeSummaryResponse])
@@ -29,9 +30,9 @@ def read_discharge_summaries(skip: int = 0, limit: int = 100, db: Session = Depe
 
 
 @router.put("/{id}", response_model=discharge_summary_schema.DischargeSummaryResponse)
-def update_discharge_summary(id: int,summary_update: discharge_summary_schema.DischargeSummaryUpdate,db: Session = Depends(get_db)):
+def update_discharge_summary(id: int,model_update: discharge_summary_schema.DischargeSummaryUpdate,db: Session = Depends(get_db)):
     """更新"""
-    updated = discharge_summary_crud.update_discharge_summary(db, id, summary_update)
+    updated = discharge_summary_crud.update_discharge_summary(db, id, model_update)
     if updated is None:
         raise HTTPException(status_code=404, detail="Discharge summary not found")
     return updated
