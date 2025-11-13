@@ -34,27 +34,22 @@ docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
 
 # バックエンド
 ## v1_fastapi_sample
-### 概要
-- サンプルアプリ(認証なし)
-### doc
-- http://localhost:80/docs
+### サンプルアプリ(認証なし)
+### doc:http://localhost:80/docs
 ### 動作確認
 ```bash
 curl http://localhost:80/
 # →"ok"%
+
 curl -X POST http://localhost:80/user_accounts -H  'Content-Type: application/json' -d '{"login_id": "test_id_1","password": "test_password_1","name": "test_name_1"}'
-```
-```bash
+
 curl -X GET http://localhost:80/user_accounts
 ```
 
 ## v1.1_fastapi_sample_with_auth
-### 概要
-- サンプルアプリ(※ログイン認証あり)
-### doc
-- http://localhost:70/docs
-### 動作確認(認証方法)
-### JWTトークンを利用したログイン認証
+### サンプルアプリ(※ログイン認証あり)
+### doc:http://localhost:70/docs
+### 動作確認(JWTトークンを利用したログイン認証)
 ```bash
 curl http://localhost:70/
 # →"ok"%
@@ -79,12 +74,9 @@ curl -X GET http://localhost:70/user_accounts_with_auth/me -H 'Authorization: Be
 # →{"id":XX,"login_id":"XXXXXX","name":"XXXXXX"}%
 ```
 ## v2_input_annotation
-### 概要
-- アノテーション入力用APIの追加
-### doc
-- http://localhost:82/docs
+### アノテーション入力用APIの追加
+### doc:http://localhost:82/docs
 ### 動作確認
-
 ```bash
 # ユーザーアカウント 1件登録
 curl -X 'POST' 'http://localhost:70/user_accounts' -H 'accept: application/json' -H 'Content-Type: application/json' \
