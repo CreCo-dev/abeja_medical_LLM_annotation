@@ -3,7 +3,7 @@
 
 実行方法:
 docker compose exec backend_v2_input_annotation python -m app.utils.doc.entity_exporter
-※docs/entity.mdに作成される
+※./app/docs/entity.mdに作成される
 """
 
 from pathlib import Path
