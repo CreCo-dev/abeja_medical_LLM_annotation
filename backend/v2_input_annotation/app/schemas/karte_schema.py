@@ -1,5 +1,5 @@
 """
-退院サマリ(DischargeSummary) に関する Pydantic スキーマ定義。
+カルテ(Karte) に関する Pydantic スキーマ定義。
 
 SQLAlchemy モデルから自動生成したベーススキーマを利用し、
 用途（新規作成・更新・レスポンス）ごとに派生スキーマを定義する。
