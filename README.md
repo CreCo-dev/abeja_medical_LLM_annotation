@@ -41,8 +41,7 @@ docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
 ### 動作確認
 ```bash
 curl http://localhost:80/
-```
-```bash
+# →"ok"%
 curl -X POST http://localhost:80/user_accounts -H  'Content-Type: application/json' -d '{"login_id": "test_id_1","password": "test_password_1","name": "test_name_1"}'
 ```
 ```bash
@@ -58,36 +57,26 @@ curl -X GET http://localhost:80/user_accounts
 ### JWTトークンを利用したログイン認証
 ```bash
 curl http://localhost:70/
+# →"ok"%
 
-→"ok"%
-```
-```bash
 curl -X POST http://localhost:70/user_accounts -H  'Content-Type: application/json' -d '{"login_id": "test_id_3","password": "test_password_3","name": "test_name_3"}'
+# →{"id":XX,"login_id":"XXXXXX","name":"XXXXXX"}% 
 
-→{"id":XX,"login_id":"XXXXXX","name":"XXXXXX"}% 
-
-```
-```bash
 curl -X GET http://localhost:70/user_accounts_with_auth/me
+# (認証失敗)
+# →{"detail":"Not authenticated"}%
 
-(認証失敗)
-→{"detail":"Not authenticated"}%
-```
-```bash
-(ログイン)
+# (ログイン)
 curl -X POST http://localhost:70/login \
      -H 'Content-Type: application/x-www-form-urlencoded' \
      -d 'username=test_id_3&password=test_password_3'
+# (ログイン成功トークン取得)
+# →{"access_token":"ey･･････.･･････,"token_type":"bearer"}%
 
-(ログイン成功トークン取得)
-→{"access_token":"ey･･････.･･････,"token_type":"bearer"}%
-```
-```bash
-(上記で取得したaccess_tokenを利用する)
+# (上記で取得したaccess_tokenを利用する)
 curl -X GET http://localhost:70/user_accounts_with_auth/me -H 'Authorization: Bearer ey･･････.･･････'
-
-(認証成功)
-→{"id":XX,"login_id":"XXXXXX","name":"XXXXXX"}%
+# (認証成功)
+# →{"id":XX,"login_id":"XXXXXX","name":"XXXXXX"}%
 ```
 ## v2_input_annotation
 ### 概要
@@ -133,12 +122,12 @@ curl -X 'GET' 'http://localhost:82/discharge_summaries/?skip=0&limit=100' -H 'ac
 ## テストデータベース
 ```mermaid
 erDiagram
-    Karte（カルテ） ||--o{ DischargeSummary（退院時サマリ） : "karte_id"
-    Karte（カルテ） ||--o{ StrokePatient（脳卒中患者） : "karte_id"
+    Karte（カルテ） ||--o{ DischargeSummary（退院時サマリ） : "karte.id"
+    Karte（カルテ） ||--o{ StrokePatient（脳卒中患者） : "karte.id"
 
     Karte（カルテ） {
         int id PK "ID"
-        string karte_id UK "カルテID"
+        string karte_data_id UK "カルテID"
         string data_type "データタイプ (退院時サマリー / 脳卒中患者)"
         String status "ステータス"
     }
