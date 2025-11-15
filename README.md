@@ -93,7 +93,13 @@ docker compose exec backend_v2_input_annotation python -m app.utils.doc.entity_e
 # フォルダ構成 (brew install tree)
 tree -I "__pycache__"
 ```
-
+### Pytest
+```bash
+cd v2_input_annotation
+docker compose up --build
+# (起動後)
+docker compose exec backend_v2_input_annotation pytest -vv
+```
 ### 動作確認
 ```bash
 # ユーザーアカウント 1件登録
