@@ -97,7 +97,8 @@ tree -I "__pycache__"
 ```bash
 cd v2_input_annotation
 docker compose up --build
-# (起動後)
+# (起動後に別のターミナルで実行)
+cd v2_input_annotation
 docker compose exec backend_v2_input_annotation pytest -vv
 ```
 ### 動作確認
