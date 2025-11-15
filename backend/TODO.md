@@ -1,11 +1,12 @@
 
 ## TODO
 - テストコード
-- スキーマから API設計書出力 生成できないエンドポイントも生成
 - V1とV2でデータベース分ける
 - DB rootでログインしているが userがよいか。 権限周り確認
 - config.py  docker-compose.ymlで設定しているものはハードコーディング不要
-
+- readme整備 
+    -  バージョン一覧 対応するポート DB(名 ポート)
+    -  Dockerに入ってSQL実行する手順
 - 退院時データ PDFから項目抽出、 確信度とコメントも、
 
 - 複数テーブルをJoinして結果を返すrouterの作成 → カルテ一覧 想定
@@ -14,6 +15,14 @@
     - login_id の重複チェック DBはユニーク制約が システム的にチェックしていない →する。
     - パスワード 72 文字を超えると 暗号化できない 入力時のチェック処理入れる。
     - ログイン以外のあくせすはデフォルトで認証必要にする
+
+- discharge_summary.py
+    registered_type のEnum化
+    Enum 型を使うとバリデーションや一貫性が高まります。例：Column(Enum(RegisteredTypeEnum))
+
+- discharge_summary_crud.py
+    karte_id + registered_type の UniqueConstraint に違反した場合に IntegrityError
+        try/exceptで補足し、HTTP 409(CONFLICT)を返すのが親切
 
 - DB 時間経過でDBとの接続が切れていた場合に 再接続する。
 - 設定関係は環境変数にもたせた動作確認
@@ -40,13 +49,30 @@
         インフラやFrontendもからみそうですが、特にインフラの要素が大きそうなイメージです。
         バックエンドだとログイン認証くらいでしょうか。
 
-discharge_summary.py
-    registered_type のEnum化
-    Enum 型を使うとバリデーションや一貫性が高まります。例：Column(Enum(RegisteredTypeEnum))
+--
+2025/11/14 MTGメモ
+脳卒中データ
+ 78項目のUC2ぎじでーた
+ 退院時さまり
+   あたらしいPDFのもの、
 
-discharge_summary_crud.py
-    karte_id + registered_type の UniqueConstraint に違反した場合に IntegrityError
-        try/exceptで補足し、HTTP 409(CONFLICT)を返すのが親切
+アノテーションごとにIDふる。
+患者*項目*2名(Aさん Bさん もしかしたら3名) ごとに採番する。→UID
+
+アノテーション画面とチェック画面
+再来週まで、
+
+12がつ 中旬リリース  
+さくらのクラウド
+
+※ あうとぷっとでーたのフォーマット例。
+
+来週木曜 顧客MTG
+5項目くらいつなぎこみ
+アノテーション
+DBにはいてるよねの確認。
+ーー
+
 
 ## LOCAL
 cd v2_input_annotation
@@ -99,44 +125,6 @@ cd v2_input_annotation
 docker compose -f docker-compose.test.yml up --build --abort-on-container-exit
 
 
-
-select * from kartes
-select * from discharge_summaries
-select * from stroke_patients;
-select * from user_accounts;
-
-delete from discharge_summaries;
-delete from stroke_patients;
-delete from kartes;
-delete from user_accounts;
-
-ALTER TABLE discharge_summaries AUTO_INCREMENT = 1;
-ALTER TABLE stroke_patients AUTO_INCREMENT = 1;
-ALTER TABLE kartes AUTO_INCREMENT = 1;
-ALTER TABLE user_accounts AUTO_INCREMENT = 1;
-
-drop table discharge_summaries;
-drop table stroke_patients;
-drop table kartes;
-drop table user_accounts;
-
-
-insert into user_accounts values (0,1,1,'test_name')
-insert into kartes values (0,1,'test_name','DC',null)
-insert into discharge_summaries values (0,1,'LLM','DC',null)
-
-INSERT INTO `discharge_summaries`
-(`karte_id`, `registered_type`, `registered_at`, `registered_by`,patient_name,patient_id)
-VALUES
-('1', 'LLM', '2025-11-09 10:30:00', 1,'test_name','test_id')
-INSERT INTO `discharge_summaries`
-(`karte_id`, `registered_type`, `registered_at`, `registered_by`,patient_name,patient_id)
-VALUES
-('1', 'MAIN', '2025-11-09 10:30:00', 1,'test_name','test_id')
-
-
-
-
 http://localhost:82/docs
 
 insert into user_accounts values (0,1,1,'test_name')
@@ -186,5 +174,40 @@ curl -X GET http://localhost:82/user_accounts_with_auth/me -H 'Authorization: Be
 
 curl -X GET http://localhost:82/user_accounts_with_auth/me -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0X2lkXzMiLCJleHAiOjE3NjI1OTE3NTV9.40d0kxqFUZBu4vI4vKTMRLkPpidmGDYWk6l-0TSEZ6c'
 
+
+# SQL
+select * from kartes
+select * from discharge_summaries
+select * from stroke_patients;
+select * from user_accounts;
+
+delete from discharge_summaries;
+delete from stroke_patients;
+delete from kartes;
+delete from user_accounts;
+
+ALTER TABLE discharge_summaries AUTO_INCREMENT = 1;
+ALTER TABLE stroke_patients AUTO_INCREMENT = 1;
+ALTER TABLE kartes AUTO_INCREMENT = 1;
+ALTER TABLE user_accounts AUTO_INCREMENT = 1;
+
+drop table discharge_summaries;
+drop table stroke_patients;
+drop table kartes;
+drop table user_accounts;
+
+
+insert into user_accounts values (0,1,1,'test_name')
+insert into kartes values (0,1,'test_name','DC',null)
+insert into discharge_summaries values (0,1,'LLM','DC',null)
+
+INSERT INTO `discharge_summaries`
+(`karte_id`, `registered_type`, `registered_at`, `registered_by`,patient_name,patient_id)
+VALUES
+('1', 'LLM', '2025-11-09 10:30:00', 1,'test_name','test_id')
+INSERT INTO `discharge_summaries`
+(`karte_id`, `registered_type`, `registered_at`, `registered_by`,patient_name,patient_id)
+VALUES
+('1', 'MAIN', '2025-11-09 10:30:00', 1,'test_name','test_id')
 
 
