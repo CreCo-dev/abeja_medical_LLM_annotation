@@ -33,6 +33,13 @@ docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
 ```
 
 # バックエンド
+## アプリケーション一覧
+| container_name | app ports | db container_name | db ports |
+|---|---|---|---|
+|backend_v1_fastapi_sample | 80 | mysql_db | 3306 |
+|backend_v1.1_with_auth | 70 | mysql_db | 3306 |
+|backend_v2_input_annotation | 82 | mysql_db | 3306 |
+
 ## v1_fastapi_sample
 ### サンプルアプリ(認証なし)
 ### doc:http://localhost:80/docs
@@ -75,7 +82,18 @@ curl -X GET http://localhost:70/user_accounts_with_auth/me -H 'Authorization: Be
 ```
 ## v2_input_annotation
 ### アノテーション入力用APIの追加
-### doc:http://localhost:82/docs
+### ドキュメント
+#### doc:http://localhost:82/docs
+#### 定義 生成 (app/docs)
+```bash
+# テーブル定義
+docker compose exec backend_v2_input_annotation python -m app.utils.doc.schema_api_exporter
+# API定義
+docker compose exec backend_v2_input_annotation python -m app.utils.doc.entity_exporter  
+# フォルダ構成 (brew install tree)
+tree -I "__pycache__"
+```
+
 ### 動作確認
 ```bash
 # ユーザーアカウント 1件登録

@@ -1,37 +1,17 @@
 
 ## TODO
+- V1とV2でデータベース分ける
+- DB rootでログインしているが userがよいか。 権限周り確認
 - テストコード
   異常系のテスト (FWでチェックできる部分はのぞく。)
     USERIDの重複登録
   docker compose exec backend_v2_input_annotation pytest -vv
-
-  test.db自動削除
-
-- V1とV2でデータベース分ける
-- DB rootでログインしているが userがよいか。 権限周り確認
-- config.py  docker-compose.ymlで設定しているものはハードコーディング不要
-
-
 - readme整備 
-  docker-compose.yml
-  パラメータ追加
-- readme整備 
-    -  バージョン一覧 対応するポート DB(名 ポート)
-
-| container_name | app ports | db container_name | db ports|
-|---|---|---|---|
-|backend_v1_fastapi_sample | 80 | mysql_db | 3306 |
-|backend_v1.1_with_auth | 70 | mysql_db | 3306 |
-|backend_v2_input_annotation | 82 | mysql_db | 3306 |
-
-    -  ドキュメントの生成手順記載(ローカル実行はDocker ビルド時に生成) コンテナ名は自動取得したい。
-      docker compose exec backend_v2_input_annotation python -m app.utils.doc.schema_api_exporter
-      docker compose exec backend_v2_input_annotation python -m app.utils.doc.entity_exporter  
-
-    -  フォルダ構成
-    tree -I "__pycache__"
-
+    -  Docsローカル実行はDocker ビルド時に生成(コンテナ名は自動取得したい。)
     -  Dockerに入ってSQL実行する手順
+
+- CSVのアウトプットの構造がわかったらDB定義
+
 - 退院時データ PDFから項目抽出、 確信度とコメントも、
 
 - 複数テーブルをJoinして結果を返すrouterの作成 → カルテ一覧 想定
