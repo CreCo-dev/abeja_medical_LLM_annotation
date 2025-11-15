@@ -12,6 +12,7 @@ from app.config import get_settings
 from app.schemas.auth_schema import TokenResponse
 
 router = APIRouter()
+#router = APIRouter(tags=["auth"])
 settings = get_settings()
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -34,11 +35,9 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
 
 def decode_access_token(token: str):
     try:
-        #print({'decode_access_token()', token}, flush=True)
         payload = jwt.decode(token, settings.secret_key, algorithms=[settings.algorithm])
         return payload.get("sub")
     except JWTError:
-        #print({'decode_access_token()  JWTError',JWTError}, flush=True)
         return None
 
 # ==========================================================
@@ -62,9 +61,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
 @router.get("/user_accounts_with_auth/me")
 def read_own_account(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     """ログイン中ユーザーの情報取得"""
-    #print({'token',token})
     login_id = decode_access_token(token)
-    #print({'login_id',login_id})
     if not login_id:
         raise HTTPException(status_code=401, detail="Invalid or expired token")
 

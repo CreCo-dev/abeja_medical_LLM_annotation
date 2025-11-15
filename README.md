@@ -79,10 +79,10 @@ curl -X GET http://localhost:70/user_accounts_with_auth/me -H 'Authorization: Be
 ### 動作確認
 ```bash
 # ユーザーアカウント 1件登録
-curl -X 'POST' 'http://localhost:70/user_accounts' -H 'accept: application/json' -H 'Content-Type: application/json' \
-   -d '{  "login_id": "test_id_1"
-         ,"password": "test_password_1"
-         ,"name": "test_name_1"}'
+curl -X 'POST' 'http://localhost:82/user_accounts/' -H 'accept: application/json' -H 'Content-Type: application/json' \
+   -d '{  "login_id": "test_id_4"
+         ,"password": "test_password_4"
+         ,"name": "test_name_4"}'
 # →レスポンスのIDを記録し、院時サマリ登録時の"registered_by"の値として設定する。
 
 # カルテ 1件登録

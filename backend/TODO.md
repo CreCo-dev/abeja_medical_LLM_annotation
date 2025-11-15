@@ -1,11 +1,36 @@
 
 ## TODO
 - テストコード
+  異常系のテスト (FWでチェックできる部分はのぞく。)
+    USERIDの重複登録
+  docker compose exec backend_v2_input_annotation pytest -vv
+
+  test.db自動削除
+
 - V1とV2でデータベース分ける
 - DB rootでログインしているが userがよいか。 権限周り確認
 - config.py  docker-compose.ymlで設定しているものはハードコーディング不要
+
+
+- readme整備 
+  docker-compose.yml
+  パラメータ追加
 - readme整備 
     -  バージョン一覧 対応するポート DB(名 ポート)
+
+| container_name | app ports | db container_name | db ports|
+|---|---|---|---|
+|backend_v1_fastapi_sample | 80 | mysql_db | 3306 |
+|backend_v1.1_with_auth | 70 | mysql_db | 3306 |
+|backend_v2_input_annotation | 82 | mysql_db | 3306 |
+
+    -  ドキュメントの生成手順記載(ローカル実行はDocker ビルド時に生成) コンテナ名は自動取得したい。
+      docker compose exec backend_v2_input_annotation python -m app.utils.doc.schema_api_exporter
+      docker compose exec backend_v2_input_annotation python -m app.utils.doc.entity_exporter  
+
+    -  フォルダ構成
+    tree -I "__pycache__"
+
     -  Dockerに入ってSQL実行する手順
 - 退院時データ PDFから項目抽出、 確信度とコメントも、
 
@@ -83,10 +108,11 @@ http://localhost:82/docs
 - ユーザーアカウント 1件登録
 
 curl -X 'POST' \
-  'http://localhost:70/user_accounts'   -H 'accept: application/json' -H 'Content-Type: application/json' \
+  'http://localhost:82/user_accounts/'   -H 'accept: application/json' -H 'Content-Type: application/json' \
    -d '{  "login_id": "test_id_1"
          ,"password": "test_password_1"
          ,"name": "test_name_1"}'
+
 
 - カルテ 1件登録
 curl -X 'POST' \
@@ -124,14 +150,22 @@ curl -X 'GET' \
 cd v2_input_annotation
 docker compose -f docker-compose.test.yml up --build --abort-on-container-exit
 
+docker compose up --build   
+
+# コンテナ内でpytest実行
+docker compose exec backend_v2_input_annotation pytest -q
+docker compose exec backend_v2_input_annotation pytest
+
+
+# テスト完了後に停止・削除
+docker compose down
+
 
 http://localhost:82/docs
 
 insert into user_accounts values (0,1,1,'test_name')
 insert into kartes values (0,1,'test_name','DC',null)
 insert into discharge_summaries values (0,1,'LLM','DC',null)
-
-
 
 
 curl -X 'GET' \
@@ -143,36 +177,26 @@ select * FROM user_accounts
 delete from user_accounts
 
 curl http://localhost:82/
-
-→"ok"%
-
-curl -X GET http://localhost:82/user_accounts
-
+# →"ok"%
 
 curl -X POST http://localhost:82/user_accounts -H  'Content-Type: application/json' -d '{"login_id": "test_id_3","password": "test_password_3","name": "test_name_3"}'
-
-→{"id":XX,"login_id":"XXXXXX","name":"XXXXXX"}% 
+# →{"id":XX,"login_id":"XXXXXX","name":"XXXXXX"}% 
 
 curl -X GET http://localhost:82/user_accounts_with_auth/me
+# (認証失敗)
+# →{"detail":"Not authenticated"}%
 
-(認証失敗)
-→{"detail":"Not authenticated"}%
-
-(ログイン)
+# (ログイン)
 curl -X POST http://localhost:82/login \
      -H 'Content-Type: application/x-www-form-urlencoded' \
-     -d 'username=test_id_3&password=test_password_3'
+     -d 'username=test_id_1&password=test_password_1'
+# (ログイン成功トークン取得)
+# →{"access_token":"ey･･････.･･････,"token_type":"bearer"}%
 
-(ログイン成功トークン取得)
-→{"access_token":"ey･･････.･･････,"token_type":"bearer"}%
-(上記で取得したaccess_tokenを利用する)
-curl -X GET http://localhost:82/user_accounts_with_auth/me -H 'Authorization: Bearer ey･･････.･･････'
-
-(認証成功)
-→{"id":XX,"login_id":"XXXXXX","name":"XXXXXX"}%
-
-
-curl -X GET http://localhost:82/user_accounts_with_auth/me -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0X2lkXzMiLCJleHAiOjE3NjI1OTE3NTV9.40d0kxqFUZBu4vI4vKTMRLkPpidmGDYWk6l-0TSEZ6c'
+# (上記で取得したaccess_tokenを利用する)
+curl -X GET http://localhost:70/user_accounts_with_auth/me -H 'Authorization: Bearer ey･･････.･･････'
+# (認証成功)
+# →{"id":XX,"login_id":"XXXXXX","name":"XXXXXX"}%
 
 
 # SQL

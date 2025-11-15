@@ -39,9 +39,19 @@ services:
     volumes:
       - ./backend/v2_input_annotation/app:/app
     environment:
-      - APP_ENV=local     #本番のインフラの場合 production とする (環境変数.envも必要)
+      #本番環境の場合 APP_ENV=production とし、environmentの内容を定義した環境変数.envを作成する
+      - APP_ENV=local
       - PYTHONPATH=/
       - DATABASE_URL=mysql+pymysql://root:password@db:3306/sampledb
+      #CORS
+      - ALLOW_ORIGINS=["http://localhost:3000"]
+      - ALLOW_METHODS=["*"]
+      - ALLOW_HEADERS=["*"]
+      - ALLOW_CREDENTIALS=True
+      #ログイン認証
+      - SECRET_KEY=dev-secret-key
+      - ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=30
     depends_on:
       db:
         condition: service_healthy
