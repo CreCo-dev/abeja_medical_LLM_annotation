@@ -197,7 +197,7 @@ def export_api_docs(app: FastAPI, output_path: str = "docs/api_schema.md"):
     # タグ → ルート一覧
     tag_map: dict[str, list[APIRoute]] = {}
     for r in routes:
-        tags = r.tags or ["未分類"]
+        tags = r.tags or ["default"]
         for t in tags:
             tag_map.setdefault(t, []).append(r)
 

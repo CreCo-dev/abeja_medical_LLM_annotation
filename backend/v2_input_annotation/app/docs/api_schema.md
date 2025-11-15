@@ -1,39 +1,8 @@
 # API 定義書
 
-# 未分類
+# default
 
 ## GET /
-
-### リクエスト
-
-None
-### レスポンス
-
-**形式:** dict
-
-**モデル:**  Any
-## POST /login
-
-**説明:** ログインID(login_id)とパスワードを受け取り、JWTを返す
-
-### リクエスト
-
-None
-### レスポンス
-
-**形式:** TokenResponse
-
-#### **モデル:** TokenResponse
-
-| フィールド | 型 | 必須 | 説明 |
-|---|---|:--:|---|
-| `access_token` | str | Y |  |
-| `token_type` | str | Y |  |
-
----
-## GET /user_accounts_with_auth/me
-
-**説明:** ログイン中ユーザーの情報取得
 
 ### リクエスト
 
@@ -169,6 +138,39 @@ None
 |---|---|:--:|---|
 | `id` |  | Y |  |
 
+### レスポンス
+
+**形式:** dict
+
+**モデル:**  Any
+# auth
+
+## POST /login
+
+**説明:** ログインID(login_id)とパスワードを受け取り、JWTを返す
+
+### リクエスト
+
+None
+### レスポンス
+
+**形式:** TokenResponse
+
+#### **モデル:** TokenResponse
+
+| フィールド | 型 | 必須 | 説明 |
+|---|---|:--:|---|
+| `access_token` | str | Y |  |
+| `token_type` | str | Y |  |
+
+---
+## GET /user_accounts_with_auth/me
+
+**説明:** ログイン中ユーザーの情報取得
+
+### リクエスト
+
+None
 ### レスポンス
 
 **形式:** dict
